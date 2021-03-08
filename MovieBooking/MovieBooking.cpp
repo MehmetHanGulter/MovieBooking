@@ -7,19 +7,15 @@ using namespace std;
 int main()
 {
 	MovieBookingSystem movie;
-	movie.addMovie(123, 1);
-	movie.addMovie(124, 1);
-	movie.addMovie(125313, 1);
-	movie.addMovie(126, 1);
-	movie.cancelMovie(125313);
-	movie.addMovie(44,3);
-	movie.showAllMovies();
-
-
-
-
+	movie.addMovie(22, 0);
+	movie.addMovie(22, 0);
+	movie.showMovie(22);
+	movie.makeReservation(22);
+	movie.showMovie(22);
 
 	
+	
+
 
 
 }

@@ -1,72 +1,186 @@
 using namespace std;
+#include <string>
+
 #pragma once
 class Movies {
 public:
-    int* p;
+	
 	Movies() {
-		size = 30;
-		length = 0;
-		p = new int[size];
-
+		col = 0;
+		row = 0;
+		p = new Movies[0];
+		SEATS = NULL;
+		this->size = 0;
+		this->length = 0;
+		this->id = 0;
 	}
-	Movies(int size) {
+	Movies(int size, int length, int id) {
+		col = 0;
+		row = 0;
 		this->size = size;
-		p = new int[size];
-		length = 0;
+		this->length = length;
+		this->id = id;
+		p = new Movies[size];
+		SEATS = NULL;
 	}
-    ~Movies() {
-        delete[] p;
-    };
 	int getLength() {
 		return length;
 	}
-	int setLength(int length) {
-		this->length = length;
+	void setRow(int a) {
+		this->row = a;
 	}
-	void append(int id)
+	int getRow() {
+		return row;
+	}
+	void append(long id, int radius)
 	{
-		p[length] = id;
+		p[length].id = id;
+		p[length].radius = radius;
+		if(radius == 0){
+			p[length].whenToSpace = 10;
+			p[length].row = 31;
+			p[length].col = 27;
+			p[length].initializeSeats();
+		}
+		if (radius == 1) {
+			p[length].whenToSpace = 6;
+			p[length].row = 16;
+			p[length].col = 14;
+			p[length].initializeSeats();
+		}
+		cout << p[length].id;	
 		length++;
 	}
 	void deleteMovieByIndex(int index) {
-		
-			int i = index;
-			while (i < length)
-			{
-				p[i] = p[i + 1];
-				i++;
-			}
-            length--;
-		
-	}
-    bool isMovieIdUnique(long movieId) {
-       
-        if (linearSearch(movieId) == -1) {
-            return true;
-        }
-        else {
-            return false;
-        }
 
-    }
-    bool isRadiusValid(int audienceRadius) {
-        if (audienceRadius >= 0 && audienceRadius <= 7) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    int linearSearch(long id) {
-        for (int i = 0; i < length; i++) {
-            if (p[i] == id) {
-                return i;
-            }
-        }
-        return -1;
-    }
+		int i = index;
+		while (i < length)
+		{
+			p[i] = p[i + 1];
+			i++;
+		}
+		length--;
+
+	}
+	bool isMovieIdUnique(long movieId) {
+
+		if (linearSearch(movieId) == -1) {
+			return true;
+		}
+		else {
+			return false;
+		}
+
+	}
+	bool isRadiusValid(int audienceRadius) {
+		if (audienceRadius >= 0 && audienceRadius <= 7) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	int linearSearch(long id) {
+		for (int i = 0; i < length; i++) {
+			if (p[i].id == id) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	void displayAllMovies() {
+		for (int i = 0; i < length; i++) {
+			cout << "\n" << p[i].id;
+		}
+	}
+	void initializeSeats() {
+		
+		SEATS = new string * [row];
+		for (int i = 0; i < row; i++)
+			SEATS[i] = new string[col];
+	}
+	
+	void displayMovie(const long movieID) {
+
+		int index = linearSearch(movieID);
+		p[index].showTheatreRoom();
+		
+
+	}
+
+	void res(const long movieID) {
+
+		int index = linearSearch(movieID);
+		if (p[index].SEATS[2][2] == "X") {
+			cout << "reservation made";
+			p[index].SEATS[2][2] = "O";
+		}
+
+	}
+
+	void showTheatreRoom() {
+		cout << "\n";
+		int i, j, k = 0;
+		int alphabet = 65;
+		for (i = 0; i < row; i++)
+		{
+			for (j = 0; j < col; j++)
+			{
+			
+				if (i == 0 && j == 0) {
+
+					SEATS[i][j] = ' ';
+				}
+				else if (i == 0 && j > 0) {
+
+					SEATS[i][j] = alphabet;
+					alphabet = alphabet + radius + 1;
+				}
+				else if (i == 1 && j == 0) {
+					SEATS[i][j] = "1";
+
+				}
+
+				else if (i > 1 && j == 0) {
+					
+					int res = (radius + 1) * i - radius;
+					SEATS[i][j] = to_string(res);
+				}
+
+				else if (i > 0 && j > 0) {
+					if (SEATS[i][j] != "O") {
+						SEATS[i][j] = "X";
+					}
+				}
+
+				if (i < whenToSpace || j>0) {
+					cout << ' ' << SEATS[i][j];
+				}
+
+				else {
+
+					cout << SEATS[i][j];
+				}
+
+				if (j == col-1) {
+
+					cout << "\n";
+				}
+
+			}
+		}
+
+	}
 
 private:
+	Movies* p;
+	string** SEATS;
+	long id;
 	int size;
 	int length;
+    int col;
+	int row;
+	int radius = 0;
+	int whenToSpace = 10;
+	int reservationCode = 0;
 };
