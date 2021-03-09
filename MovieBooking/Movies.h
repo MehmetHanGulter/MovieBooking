@@ -1,4 +1,4 @@
-using namespace std;
+﻿using namespace std;
 #include <string>
 
 #pragma once
@@ -23,31 +23,72 @@ public:
 		p = new Movies[size];
 		SEATS = NULL;
 	}
-	int getLength() {
-		return length;
+	~Movies() {
+		delete[] p;
+
+		for (int i = 0; i < row; i++) {
+			delete[] SEATS[i];
+		}
+		delete[] SEATS;
 	}
-	void setRow(int a) {
-		this->row = a;
-	}
-	int getRow() {
-		return row;
-	}
+
 	void append(long id, int radius)
 	{
 		p[length].id = id;
 		p[length].radius = radius;
-		if(radius == 0){
+
+		switch (radius)
+		{
+		case 0:
 			p[length].whenToSpace = 10;
 			p[length].row = 31;
 			p[length].col = 27;
 			p[length].initializeSeats();
-		}
-		if (radius == 1) {
+			break;
+		case 1:
 			p[length].whenToSpace = 6;
 			p[length].row = 16;
 			p[length].col = 14;
 			p[length].initializeSeats();
+			break;
+		case 2:
+			p[length].whenToSpace = 4;
+			p[length].row = 11;
+			p[length].col = 10;
+			p[length].initializeSeats();
+			break;
+		case 3:
+			p[length].whenToSpace = 4;
+			p[length].row = 9;
+			p[length].col = 8;
+			p[length].initializeSeats();
+			break;
+		case 4:
+			p[length].whenToSpace = 3;
+			p[length].row = 7;
+			p[length].col = 7;
+			p[length].initializeSeats();
+			break;
+		case 5:
+			p[length].whenToSpace = 3;
+			p[length].row = 6;
+			p[length].col = 6;
+			p[length].initializeSeats();
+			break;
+		case 6:
+			p[length].whenToSpace = 3;
+			p[length].row = 6;
+			p[length].col = 5;
+			p[length].initializeSeats();
+			break;
+		case 7:
+			p[length].whenToSpace = 3;
+			p[length].row = 5;
+			p[length].col = 5;
+			p[length].initializeSeats();
+			break;
 		}
+
 		cout << p[length].id;	
 		length++;
 	}
@@ -108,29 +149,43 @@ public:
 
 	}
 
-	void res(const long movieID, const int row, const char col) {
+	int res(const long movieID, const int row, const char col) {
 
 		int index = linearSearch(movieID);
 	
-		if (!isMovieIdUnique(movieID) && !isReserved(movieID, row, col) && isAvaible(movieID, row, col)) {
+		if (!isMovieIdUnique(movieID) && !isReserved(movieID, row, col) && isAvaible(movieID, row, col) && isInFormat(row,col)) {          
 			
-			p[index].SEATS[((row-1)/(p[index].radius+1))+1][((int(col) - 65)/ (p[index].radius + 1)) + 1] = "O";
+			p[index].SEATS[((row-1)/(p[index].radius+1))+1][((int(col) - 65) / (p[index].radius + 1)) + 1] = "O";
+
+			int rowa = row; // 1 basamak
+			int cola = int(col); // 2 basamak 20
+			int indeksRes = index; //1 basamak
+
+			int code = cola * 100 + rowa * 10 + indeksRes;
+			return code;
 
 			}
 		else {
 			cout << "\n" << col << row << " seat is not avaible.";
+			return -1;
 		}
 
 		
-	}
-
-	void decyrptResCode(const int resCode) {
-
-
 
 	}
 
 	void showReservation(const int resCode) {
+
+		
+		int resCol = resCode / 100;
+		int resRow = (resCode / 10) % 10;
+		int index = resCode % 10;
+		if (isReserved(p[index].id, resRow, resCol) && resCode!=-1) {
+			cout << "seat: " << char(resCol) << resRow << " in movie at " << p[index].id << "\n";
+		}
+		else {
+			cout << "unvalid reservation code.";
+		}
 
 	}
 
@@ -156,6 +211,17 @@ public:
 
 			return true;
 
+		}
+		else {
+			return false;
+		}
+
+	}
+
+	bool isInFormat(const int row, const char col) {
+
+		if (row > -1 && row < 31 && int(col)>64 && int(col) < 91) {
+			return true;
 		}
 		else {
 			return false;
@@ -217,6 +283,9 @@ public:
 
 	}
 
+	void asd() {
+		
+	}
 private:
 	Movies* p;
 	string** SEATS;
@@ -224,8 +293,8 @@ private:
 	int size;
 	int length;
     int col;
-	int row;
+    int row;
 	int radius = 0;
-	int whenToSpace = 10;
+	int whenToSpace = 0;
 	int reservationCode = 0;
 };
