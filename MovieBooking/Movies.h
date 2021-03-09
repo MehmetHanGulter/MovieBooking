@@ -108,17 +108,62 @@ public:
 
 	}
 
-	void res(const long movieID) {
+	void res(const long movieID, const int row, const char col) {
 
 		int index = linearSearch(movieID);
-		if (p[index].SEATS[2][2] == "X") {
-			cout << "reservation made";
-			p[index].SEATS[2][2] = "O";
+	
+		if (!isMovieIdUnique(movieID) && !isReserved(movieID, row, col) && isAvaible(movieID, row, col)) {
+			
+			p[index].SEATS[((row-1)/(p[index].radius+1))+1][((int(col) - 65)/ (p[index].radius + 1)) + 1] = "O";
+
+			}
+		else {
+			cout << "\n" << col << row << " seat is not avaible.";
+		}
+
+		
+	}
+
+	void decyrptResCode(const int resCode) {
+
+
+
+	}
+
+	void showReservation(const int resCode) {
+
+	}
+
+	bool isReserved(const long movieID, const int row, const char col) {
+
+		int index = linearSearch(movieID);
+		if (p[index].SEATS[row][int(col) - 64] == "X") {
+
+			return false;
+		}
+		else {
+
+			return true;
 		}
 
 	}
 
-	void showTheatreRoom() {
+	bool isAvaible(const long movieID, const int row, const char col) {
+		
+		int index = linearSearch(movieID);
+
+		if ((int(col)-65) % (p[index].radius + 1) == 0 && (row-1) % (p[index].radius + 1) == 0) {
+
+			return true;
+
+		}
+		else {
+			return false;
+		}
+
+	}
+
+	void showTheatreRoom() {	
 		cout << "\n";
 		int i, j, k = 0;
 		int alphabet = 65;

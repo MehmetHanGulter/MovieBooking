@@ -62,9 +62,9 @@ public:
         }
     }
 
-    void makeReservation(const long movieID) {
+    void makeReservation(const long movieID, const int row, const char col) {
 
-        movie->res(movieID);
+        movie->res(movieID,row, col);
     }
    
 private:
