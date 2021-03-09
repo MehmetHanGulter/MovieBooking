@@ -139,12 +139,50 @@ public:
 		SEATS = new string * [row];
 		for (int i = 0; i < row; i++)
 			SEATS[i] = new string[col];
+
+
+		int i, j, k = 0;
+		int alphabet = 65;
+		for (i = 0; i < row; i++)
+		{
+			for (j = 0; j < col; j++)
+			{
+
+				if (i == 0 && j == 0) {
+
+					SEATS[i][j] = ' ';
+				}
+				else if (i == 0 && j > 0) {
+
+					SEATS[i][j] = alphabet;
+					alphabet = alphabet + radius + 1;
+				}
+				else if (i == 1 && j == 0) {
+					SEATS[i][j] = "1";
+
+				}
+
+				else if (i > 1 && j == 0) {
+
+					int res = (radius + 1) * i - radius;
+					SEATS[i][j] = to_string(res);
+				}
+
+				else if (i > 0 && j > 0) {
+					if (SEATS[i][j] != "O") {
+						SEATS[i][j] = "X";
+					}
+				}
+
+			}
+		}
+
 	}
 	
 	void displayMovie(const long movieID) {
 
-		int index = linearSearch(movieID);
-		p[index].showTheatreRoom();
+		
+		showTheatreRoom(movieID);
 		
 
 	}
@@ -153,23 +191,29 @@ public:
 
 		int index = linearSearch(movieID);
 	
-		if (!isMovieIdUnique(movieID) && !isReserved(movieID, row, col) && isAvaible(movieID, row, col) && isInFormat(row,col)) {          
+		if (!isMovieIdUnique(movieID) && !isReserved(movieID, row, col) && p[index].isAvaible(row, col) && isInFormat(row,col)) {
 			
 			p[index].SEATS[((row-1)/(p[index].radius+1))+1][((int(col) - 65) / (p[index].radius + 1)) + 1] = "O";
+
+			cout << "\n" << "RESERVATION MADE ON " << col << row;
 
 			int rowa = row; // 1 basamak
 			int cola = int(col); // 2 basamak 20
 			int indeksRes = index; //1 basamak
-
 			int code = cola * 100 + rowa * 10 + indeksRes;
 			return code;
 
 			}
-		else {
-			cout << "\n" << col << row << " seat is not avaible.";
+		else if(!p[index].isAvaible(row, col)) {
+			cout << "\n" << col << row << " seat is not occupiable.";
 			return -1;
 		}
 
+		else {
+			cout << "\n" << col << row << " seat is not avaible.";
+			return -1;
+
+		}
 		
 
 	}
@@ -180,34 +224,54 @@ public:
 		int resCol = resCode / 100;
 		int resRow = (resCode / 10) % 10;
 		int index = resCode % 10;
-		if (isReserved(p[index].id, resRow, resCol) && resCode!=-1) {
-			cout << "seat: " << char(resCol) << resRow << " in movie at " << p[index].id << "\n";
+		if (isReserved(p[index].id ,resRow, resCol)) {
+			cout << "\nseat: " << char(resCol) << resRow << " in movie at " << p[index].id << "\n";
 		}
 		else {
-			cout << "unvalid reservation code.";
+			cout << "\nunvalid reservation code.";
 		}
 
 	}
 
+	void cancelReservations(const int numRes, const int* resCode) {
+
+
+		for (int i = 0; i < numRes; i++)
+		{
+			if (resCode[i] > 0) {
+				int resCol = resCode[i] / 100;
+				int resRow = (resCode[i] / 10) % 10;
+				int index = resCode[i] % 10;
+				if (isReserved(p[index].id, resRow, resCol)) {
+
+					p[index].SEATS[((resRow - 1) / (p[index].radius + 1)) + 1][((int(resCol) - 65) / (p[index].radius + 1)) + 1] = "X";
+					cout << "\nseat: " << char(resCol) << resRow << " in movie at " << p[index].id << " has been canceled.\n";
+				}
+			}
+		}
+
+	}
+
+
 	bool isReserved(const long movieID, const int row, const char col) {
 
 		int index = linearSearch(movieID);
-		if (p[index].SEATS[row][int(col) - 64] == "X") {
 
+		if (p[index].SEATS[((row - 1) / (p[index].radius + 1)) + 1][((int(col) - 65) / (p[index].radius + 1)) + 1] == "X") {
+			
 			return false;
 		}
 		else {
-
+		
 			return true;
 		}
 
 	}
 
-	bool isAvaible(const long movieID, const int row, const char col) {
+	bool isAvaible(const int row, const char col) {
 		
-		int index = linearSearch(movieID);
 
-		if ((int(col)-65) % (p[index].radius + 1) == 0 && (row-1) % (p[index].radius + 1) == 0) {
+		if ((int(col)-65) % (radius + 1) == 0 && (row-1) % (radius + 1) == 0) {
 
 			return true;
 
@@ -229,51 +293,26 @@ public:
 
 	}
 
-	void showTheatreRoom() {	
+	void showTheatreRoom(const long movieID) {
 		cout << "\n";
+		int index = linearSearch(movieID);
 		int i, j, k = 0;
 		int alphabet = 65;
-		for (i = 0; i < row; i++)
+		for (i = 0; i < p[index].row; i++)
 		{
-			for (j = 0; j < col; j++)
+			for (j = 0; j < p[index].col; j++)
 			{
 			
-				if (i == 0 && j == 0) {
-
-					SEATS[i][j] = ' ';
-				}
-				else if (i == 0 && j > 0) {
-
-					SEATS[i][j] = alphabet;
-					alphabet = alphabet + radius + 1;
-				}
-				else if (i == 1 && j == 0) {
-					SEATS[i][j] = "1";
-
-				}
-
-				else if (i > 1 && j == 0) {
-					
-					int res = (radius + 1) * i - radius;
-					SEATS[i][j] = to_string(res);
-				}
-
-				else if (i > 0 && j > 0) {
-					if (SEATS[i][j] != "O") {
-						SEATS[i][j] = "X";
-					}
-				}
-
-				if (i < whenToSpace || j>0) {
-					cout << ' ' << SEATS[i][j];
+				if (i < p[index].whenToSpace || j>0) {
+					cout << ' ' << p[index].SEATS[i][j];
 				}
 
 				else {
 
-					cout << SEATS[i][j];
+					cout << p[index].SEATS[i][j];
 				}
 
-				if (j == col-1) {
+				if (j == p[index].col-1) {
 
 					cout << "\n";
 				}
@@ -283,9 +322,6 @@ public:
 
 	}
 
-	void asd() {
-		
-	}
 private:
 	Movies* p;
 	string** SEATS;

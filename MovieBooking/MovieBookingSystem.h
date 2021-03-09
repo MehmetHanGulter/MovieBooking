@@ -45,7 +45,7 @@ public:
 
         }
     }
-     void showAllMovies() {
+    void showAllMovies() {
          movie->displayAllMovies();
 
      
@@ -61,18 +61,18 @@ public:
 
         }
     }
-
     int makeReservation(const long movieID, const int row, const char col) {
 
         return movie->res(movieID,row, col);
     }
-
     void showReservation(const int resCode) {
 
         movie->showReservation(resCode);
 
     }
-   
+    void cancelReservations(const int numRes, const int* resCode) {
+        movie->cancelReservations(numRes, resCode);
+    }
 private:
     Movies *movie = new Movies(10,0,0);
 
