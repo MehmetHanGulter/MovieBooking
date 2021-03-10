@@ -46,48 +46,56 @@ public:
 			p[length].whenToSpace = 10;
 			p[length].row = 31;
 			p[length].col = 27;
+			p[length].avaibleSeats = 780;
 			p[length].initializeSeats();
 			break;
 		case 1:
 			p[length].whenToSpace = 6;
 			p[length].row = 16;
 			p[length].col = 14;
+			p[length].avaibleSeats = 195;
 			p[length].initializeSeats();
 			break;
 		case 2:
 			p[length].whenToSpace = 4;
 			p[length].row = 11;
 			p[length].col = 10;
+			p[length].avaibleSeats = 90;
 			p[length].initializeSeats();
 			break;
 		case 3:
 			p[length].whenToSpace = 4;
 			p[length].row = 9;
 			p[length].col = 8;
+			p[length].avaibleSeats = 56;
 			p[length].initializeSeats();
 			break;
 		case 4:
 			p[length].whenToSpace = 3;
 			p[length].row = 7;
 			p[length].col = 7;
+			p[length].avaibleSeats = 36;
 			p[length].initializeSeats();
 			break;
 		case 5:
 			p[length].whenToSpace = 3;
 			p[length].row = 6;
 			p[length].col = 6;
+			p[length].avaibleSeats = 25;
 			p[length].initializeSeats();
 			break;
 		case 6:
 			p[length].whenToSpace = 3;
 			p[length].row = 6;
 			p[length].col = 5;
+			p[length].avaibleSeats = 20;
 			p[length].initializeSeats();
 			break;
 		case 7:
 			p[length].whenToSpace = 3;
 			p[length].row = 5;
 			p[length].col = 5;
+			p[length].avaibleSeats = 16;
 			p[length].initializeSeats();
 			break;
 		}
@@ -143,6 +151,7 @@ public:
 			for (int i = 0; i < length; i++) {
 				cout << "\nMovie at: ";
 				printDate(p[i].id);
+				cout << " (" << "avaible seats :" << p[i].avaibleSeats << ")";
 			}
 		}
 		else {
@@ -197,7 +206,10 @@ public:
 	
 	void displayMovie(const long movieID) {
 
-		
+		int index = linearSearch(movieID);
+		cout << "\nMovie at: ";
+		printDate(movieID);
+		cout << " (" << "avaible seats :" << p[index].avaibleSeats << ")";
 		showTheatreRoom(movieID);
 		
 
@@ -218,6 +230,7 @@ public:
 			int cola = int(col); // 2 basamak 20
 			int indeksRes = index; //1 basamak
 			int code = cola * 100 + rowa * 10 + indeksRes;
+			p[index].avaibleSeats--;
 			return code;
 
 			}
@@ -267,12 +280,12 @@ public:
 					cout << "\nSeat: " << char(resCol) << resRow << " in movie at ";
 					printDate(p[index].id);
 					cout << "has been canceled.\n";
+					p[index].avaibleSeats++;
 				}
 			}
 		}
 
 	}
-
 
 	bool isReserved(const long movieID, const int row, const char col) {
 
@@ -361,4 +374,5 @@ private:
 	int radius = 0;
 	int whenToSpace = 0;
 	int reservationCode = 0;
+	int avaibleSeats = 0;
 };
