@@ -282,6 +282,12 @@ public:
 					cout << "has been canceled.\n";
 					p[index].avaibleSeats++;
 				}
+				else {
+					cout << "\nunvalid reservation code.";
+				}
+			}
+			else {
+				cout << "\nunvalid reservation code.";
 			}
 		}
 
