@@ -1,5 +1,6 @@
 ﻿using namespace std;
 #include <string>
+#include <time.h>
 
 #pragma once
 class Movies {
@@ -14,6 +15,7 @@ public:
 		this->length = 0;
 		this->id = 0;
 	}
+	
 	Movies(int size, int length, int id) {
 		col = 0;
 		row = 0;
@@ -23,6 +25,7 @@ public:
 		p = new Movies[size];
 		SEATS = NULL;
 	}
+	
 	~Movies() {
 		delete[] p;
 
@@ -89,9 +92,10 @@ public:
 			break;
 		}
 
-		cout << p[length].id;	
+		printDate(id);
 		length++;
 	}
+	
 	void deleteMovieByIndex(int index) {
 
 		int i = index;
@@ -103,6 +107,7 @@ public:
 		length--;
 
 	}
+	
 	bool isMovieIdUnique(long movieId) {
 
 		if (linearSearch(movieId) == -1) {
@@ -113,6 +118,7 @@ public:
 		}
 
 	}
+	
 	bool isRadiusValid(int audienceRadius) {
 		if (audienceRadius >= 0 && audienceRadius <= 7) {
 			return true;
@@ -121,6 +127,7 @@ public:
 			return false;
 		}
 	}
+	
 	int linearSearch(long id) {
 		for (int i = 0; i < length; i++) {
 			if (p[i].id == id) {
@@ -129,11 +136,20 @@ public:
 		}
 		return -1;
 	}
+	
 	void displayAllMovies() {
-		for (int i = 0; i < length; i++) {
-			cout << "\n" << p[i].id;
+		if (length>0) {
+			cout << "Movies on Show: ";
+			for (int i = 0; i < length; i++) {
+				cout << "\nMovie at: ";
+				printDate(p[i].id);
+			}
+		}
+		else {
+			cout << "No movies on show.";
 		}
 	}
+	
 	void initializeSeats() {
 		
 		SEATS = new string * [row];
@@ -195,7 +211,8 @@ public:
 			
 			p[index].SEATS[((row-1)/(p[index].radius+1))+1][((int(col) - 65) / (p[index].radius + 1)) + 1] = "O";
 
-			cout << "\n" << "RESERVATION MADE ON " << col << row;
+			cout << "\n" << "RESERVATION MADE ON " << col << row << " at ";
+			printDate(p[index].id);
 
 			int rowa = row; // 1 basamak
 			int cola = int(col); // 2 basamak 20
@@ -225,7 +242,9 @@ public:
 		int resRow = (resCode / 10) % 10;
 		int index = resCode % 10;
 		if (isReserved(p[index].id ,resRow, resCol)) {
-			cout << "\nseat: " << char(resCol) << resRow << " in movie at " << p[index].id << "\n";
+			cout << "\nseat: " << char(resCol) << resRow << " in movie at ";
+			printDate(p[index].id);
+			cout << "\n";
 		}
 		else {
 			cout << "\nunvalid reservation code.";
@@ -245,7 +264,9 @@ public:
 				if (isReserved(p[index].id, resRow, resCol)) {
 
 					p[index].SEATS[((resRow - 1) / (p[index].radius + 1)) + 1][((int(resCol) - 65) / (p[index].radius + 1)) + 1] = "X";
-					cout << "\nseat: " << char(resCol) << resRow << " in movie at " << p[index].id << " has been canceled.\n";
+					cout << "\nSeat: " << char(resCol) << resRow << " in movie at ";
+					printDate(p[index].id);
+					cout << "has been canceled.\n";
 				}
 			}
 		}
@@ -320,6 +341,13 @@ public:
 			}
 		}
 
+	}
+
+	void printDate(const long id) {
+		time_t asd = id;
+		char str[26];
+		ctime_s(str, sizeof str, &asd);
+		cout << str;
 	}
 
 private:
