@@ -4,4 +4,4 @@ Movie Booking System with
 -Audience radius(because of corona virus)
 -Reservation system
 -Movie Operations
--Movie Theatre Graphic
+-Movie Theatre Console Graphic
